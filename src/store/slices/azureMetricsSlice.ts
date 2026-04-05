@@ -11,23 +11,18 @@ interface MetricsState {
   lastFetched: string | null;
 }
 
-const initialState: MetricsState = {
-  data: {},
-  loading: false,
-  error: null,
-  lastFetched: null,
-};
+const initialState: MetricsState = { data: {}, loading: false, error: null, lastFetched: null };
 
 export const fetchMetrics = createAsyncThunk(
   'azureMetrics/fetch',
   async (params: { subscriptionId?: string; resourceGroupName?: string; resourceId?: string; timeRange?: string; metricNames?: string }, { rejectWithValue }) => {
     try {
       const response = await azureApi.getMetrics(params);
-      const results = z.array(AzureResourceMetricSchema).parse(response.data);
-      return results;
+      // Single resource returns a single object; wrap in array for uniform handling
+      const raw = (response.data as any)?.results ?? (Array.isArray(response.data) ? response.data : [response.data]);
+      return z.array(AzureResourceMetricSchema).parse(raw);
     } catch (error) {
-      const parsed = parseError(error);
-      return rejectWithValue(parsed.message);
+      return rejectWithValue(parseError(error).message);
     }
   }
 );
@@ -40,10 +35,7 @@ const azureMetricsSlice = createSlice({
       state.data[action.payload.resourceId] = action.payload;
       state.lastFetched = new Date().toISOString();
     },
-    clearMetrics: (state) => {
-      state.data = {};
-      state.error = null;
-    },
+    clearMetrics: (state) => { state.data = {}; state.error = null; },
   },
   extraReducers: (builder) => {
     builder
@@ -53,10 +45,7 @@ const azureMetricsSlice = createSlice({
         state.lastFetched = new Date().toISOString();
         action.payload.forEach((m) => { state.data[m.resourceId] = m; });
       })
-      .addCase(fetchMetrics.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      .addCase(fetchMetrics.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; });
   },
 });
 

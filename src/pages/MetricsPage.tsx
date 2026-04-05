@@ -39,13 +39,16 @@ const MetricsPage: React.FC = () => {
           {/* Metric summary cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
             {displayed.slice(0, 1).map((m) =>
-              Object.entries(m.metrics).filter(([, v]) => v).map(([key, val]) => (
-                <div key={key} className="p-3 rounded-lg bg-card border border-border">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{key.replace(/([A-Z])/g, ' $1')}</p>
-                  <p className="text-lg font-bold font-mono text-foreground">{formatMetricValue(val!.value, val!.unit)}</p>
-                  <MetricTrendBadge trend={val!.trend} />
-                </div>
-              ))
+              Object.entries(m.metrics).filter(([, v]) => v).map(([key, val]) => {
+                const metric = val as { value: number | null; unit: string; trend: 'rising' | 'falling' | 'stable' };
+                return (
+                  <div key={key} className="p-3 rounded-lg bg-card border border-border">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{key.replace(/([A-Z])/g, ' $1')}</p>
+                    <p className="text-lg font-bold font-mono text-foreground">{formatMetricValue(metric.value, metric.unit)}</p>
+                    <MetricTrendBadge trend={metric.trend} />
+                  </div>
+                );
+              })
             )}
           </div>
 

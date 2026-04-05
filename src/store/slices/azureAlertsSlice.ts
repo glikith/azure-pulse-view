@@ -18,7 +18,8 @@ export const fetchAlerts = createAsyncThunk(
   async (params: { subscriptionId?: string; timeRange?: string }, { rejectWithValue }) => {
     try {
       const response = await azureApi.getAlerts(params);
-      return z.array(AzureAlertSchema).parse(response.data);
+      const raw = (response.data as any)?.alerts ?? response.data;
+      return z.array(AzureAlertSchema).parse(raw);
     } catch (error) {
       return rejectWithValue(parseError(error).message);
     }
@@ -39,10 +40,7 @@ const azureAlertsSlice = createSlice({
         state.active = action.payload.filter((a) => a.state !== 'Closed');
         state.historical = action.payload.filter((a) => a.state === 'Closed');
       })
-      .addCase(fetchAlerts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      .addCase(fetchAlerts.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; });
   },
 });
 

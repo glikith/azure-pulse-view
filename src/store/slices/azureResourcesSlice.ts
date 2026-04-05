@@ -19,7 +19,8 @@ export const fetchResources = createAsyncThunk(
   async (params: { subscriptionId?: string; resourceGroupName?: string }, { rejectWithValue }) => {
     try {
       const response = await azureApi.getResources(params);
-      return z.array(AzureResourceSchema).parse(response.data);
+      const raw = (response.data as any)?.resources ?? response.data;
+      return z.array(AzureResourceSchema).parse(raw);
     } catch (error) {
       return rejectWithValue(parseError(error).message);
     }
@@ -31,7 +32,8 @@ export const fetchResourceGroups = createAsyncThunk(
   async (params: { subscriptionId?: string }, { rejectWithValue }) => {
     try {
       const response = await azureApi.getResourceGroups(params);
-      return z.array(AzureResourceGroupSchema).parse(response.data);
+      const raw = (response.data as any)?.resourceGroups ?? response.data;
+      return z.array(AzureResourceGroupSchema).parse(raw);
     } catch (error) {
       return rejectWithValue(parseError(error).message);
     }

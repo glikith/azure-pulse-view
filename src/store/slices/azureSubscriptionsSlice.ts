@@ -18,7 +18,8 @@ export const fetchSubscriptions = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await azureApi.getSubscriptions();
-      return z.array(AzureSubscriptionSchema).parse(response.data);
+      const raw = (response.data as any)?.subscriptions ?? response.data;
+      return z.array(AzureSubscriptionSchema).parse(raw);
     } catch (error) {
       return rejectWithValue(parseError(error).message);
     }

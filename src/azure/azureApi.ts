@@ -1,37 +1,35 @@
-import axios, { AxiosError } from 'axios';
-import { DEFAULT_API_BASE_URL } from './azureConstants';
+import { supabase } from '@/integrations/supabase/client';
 
-let apiBaseUrl = DEFAULT_API_BASE_URL;
-
+let apiBaseUrl = '/api/azure'; // kept for Settings page compatibility only
 export const setApiBaseUrl = (url: string) => { apiBaseUrl = url; };
 export const getApiBaseUrl = () => apiBaseUrl;
 
-const client = axios.create({ timeout: 30000 });
+// Core Edge Function invoker — all API calls go through here
+async function invoke<T>(fnName: string, body: Record<string, unknown> = {}): Promise<{ data: T }> {
+  const { data, error } = await supabase.functions.invoke(fnName, { body });
 
-client.interceptors.response.use(
-  (res) => res,
-  (error: AxiosError) => {
-    const status = error.response?.status;
-    const data = error.response?.data as Record<string, unknown> | undefined;
-    const message = (data?.message as string) || error.message;
+  if (error) {
+    const status = (error as any)?.context?.status;
+    let message = error.message || `Edge Function "${fnName}" failed.`;
 
-    const enriched: Record<string, unknown> = {
-      status,
-      message,
-      isNetworkError: !error.response,
-    };
+    if (status === 401) message = 'Azure authentication failed. Your session may have expired.';
+    else if (status === 403) message = 'You do not have permission to access this resource. Contact your Azure admin.';
+    else if (status === 404) message = 'Resource not found in Azure. It may have been deleted or moved.';
+    else if (status === 429) message = `Azure Monitor rate limit reached. ${message}`;
+    else if (!status) message = 'Could not reach the backend. Check your network connection.';
 
-    if (status === 401) enriched.message = 'Azure authentication failed. Your session may have expired.';
-    else if (status === 403) enriched.message = `You do not have permission to access this resource. Contact your Azure admin.`;
-    else if (status === 404) enriched.message = 'Resource not found in Azure. It may have been deleted or moved.';
-    else if (status === 429) enriched.message = `Azure Monitor rate limit reached. ${message}`;
-    else if (!error.response) enriched.message = 'Could not reach the backend server. Check your VPN or network connection.';
-
+    const enriched = { message, status, isNetworkError: !status };
     return Promise.reject(enriched);
   }
-);
 
-interface QueryParams {
+  if (data?.error) {
+    return Promise.reject({ message: data.userMessage || data.message || 'Azure API error', isNetworkError: false });
+  }
+
+  return { data: data as T };
+}
+
+export interface QueryParams {
   subscriptionId?: string;
   resourceGroupName?: string;
   resourceId?: string;
@@ -41,31 +39,28 @@ interface QueryParams {
   workspaceId?: string;
 }
 
-const buildParams = (params: QueryParams) => {
-  const p: Record<string, string> = {};
-  Object.entries(params).forEach(([k, v]) => { if (v) p[k] = v; });
-  return p;
-};
-
 export const azureApi = {
   getSubscriptions: () =>
-    client.get(`${apiBaseUrl}/subscriptions`),
+    invoke('azure-subscriptions', {}),
 
   getResources: (params: QueryParams) =>
-    client.get(`${apiBaseUrl}/resources`, { params: buildParams(params) }),
+    invoke('azure-resources', params as Record<string, unknown>),
 
   getResourceGroups: (params: QueryParams) =>
-    client.get(`${apiBaseUrl}/resource-groups`, { params: buildParams(params) }),
+    invoke('azure-resource-groups', params as Record<string, unknown>),
 
   getMetrics: (params: QueryParams) =>
-    client.get(`${apiBaseUrl}/metrics`, { params: buildParams(params) }),
+    invoke('azure-metrics', {
+      ...params as Record<string, unknown>,
+      metricNames: params.metricNames ? params.metricNames.split(',').map((s) => s.trim()) : [],
+    }),
 
   getLogs: (params: QueryParams) =>
-    client.get(`${apiBaseUrl}/logs`, { params: buildParams(params) }),
+    invoke('azure-logs', params as Record<string, unknown>),
 
   getAlerts: (params: QueryParams) =>
-    client.get(`${apiBaseUrl}/alerts`, { params: buildParams(params) }),
+    invoke('azure-alerts', params as Record<string, unknown>),
 
   getHealth: (params: QueryParams) =>
-    client.get(`${apiBaseUrl}/health`, { params: buildParams(params) }),
+    invoke('azure-health', params as Record<string, unknown>),
 };
