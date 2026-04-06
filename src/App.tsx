@@ -17,6 +17,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <Provider store={store}>
+    <ThemeSync />
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
