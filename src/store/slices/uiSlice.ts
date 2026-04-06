@@ -22,6 +22,7 @@ const initialState: UiState = {
   selectedTimeRange: 'PT1H',
   selectedRegion: null,
   sidebarOpen: true,
+  darkMode: true,
   pollingInterval: 5000,
   wsUrl: 'ws://localhost:3001/ws/azure/metrics-stream',
   apiBaseUrl: '/api/azure',
