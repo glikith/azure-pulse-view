@@ -81,7 +81,7 @@ const uiSlice = createSlice({
 
 export const {
   setSelectedSubscription, setSelectedResourceGroup, setSelectedTimeRange,
-  setSelectedRegion, toggleSidebar, setPollingInterval, setWsUrl, setApiBaseUrl,
+  setSelectedRegion, toggleSidebar, toggleDarkMode, setPollingInterval, setWsUrl, setApiBaseUrl,
   setAlertSeverityThreshold, setKqlWorkspaceId, setWsConnectionState, setLastRefreshed,
 } = uiSlice.actions;
 export default uiSlice.reducer;
