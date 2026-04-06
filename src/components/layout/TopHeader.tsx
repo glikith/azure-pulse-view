@@ -1,11 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Activity } from 'lucide-react';
 import TimeRangePicker from '@/components/shared/TimeRangePicker';
 import ConnectionStatus from '@/components/shared/ConnectionStatus';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { setSelectedSubscription, setSelectedResourceGroup, setSelectedRegion } from '@/store/slices/uiSlice';
-import { toggleSidebar } from '@/store/slices/uiSlice';
 
 const TopHeader: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -20,21 +17,6 @@ const TopHeader: React.FC = () => {
 
   return (
     <header className="h-12 flex items-center gap-3 px-4 border-b border-border bg-card/50 backdrop-blur shrink-0">
-      <button
-        onClick={() => dispatch(toggleSidebar())}
-        className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-        aria-label="Toggle sidebar"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
-
-      <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
-          <Activity className="h-3.5 w-3.5 text-primary-foreground" />
-        </div>
-        <span className="text-sm font-semibold text-foreground tracking-tight">VMS Monitor</span>
-      </Link>
-
       <select
         value={selectedSub || ''}
         onChange={(e) => dispatch(setSelectedSubscription(e.target.value || null))}
