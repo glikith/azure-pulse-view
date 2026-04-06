@@ -32,12 +32,6 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside className={`flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200 ${sidebarOpen ? 'w-56' : 'w-14'}`}>
-      <div className="flex items-center gap-2 px-3 h-14 border-b border-sidebar-border">
-        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-          <Activity className="h-4 w-4 text-primary-foreground" />
-        </div>
-        {sidebarOpen && <span className="text-sm font-semibold text-foreground tracking-tight">VMS Monitor</span>}
-      </div>
 
       <nav className="flex-1 py-2 space-y-0.5 px-2">
         {navItems.map((item) => {
