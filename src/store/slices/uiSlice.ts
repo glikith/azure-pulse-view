@@ -6,6 +6,7 @@ interface UiState {
   selectedTimeRange: string;
   selectedRegion: string | null;
   sidebarOpen: boolean;
+  darkMode: boolean;
   pollingInterval: number;
   wsUrl: string;
   apiBaseUrl: string;
