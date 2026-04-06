@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import {
-  LayoutDashboard, Server, Activity, FileText, Bell, Settings, ChevronLeft, ChevronRight
+  LayoutDashboard, Server, Activity, FileText, Bell, Settings
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { toggleSidebar } from '@/store/slices/uiSlice';
