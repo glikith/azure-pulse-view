@@ -20,6 +20,13 @@ const TopHeader: React.FC = () => {
 
   return (
     <header className="h-12 flex items-center gap-3 px-4 border-b border-border bg-card/50 backdrop-blur shrink-0">
+      <button
+        onClick={() => navigate('/')}
+        className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+        aria-label="Go to home"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
       <select
         value={selectedSub || ''}
         onChange={(e) => dispatch(setSelectedSubscription(e.target.value || null))}
