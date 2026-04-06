@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import TimeRangePicker from '@/components/shared/TimeRangePicker';
 import ConnectionStatus from '@/components/shared/ConnectionStatus';
 import { useAppSelector, useAppDispatch } from '@/store';
