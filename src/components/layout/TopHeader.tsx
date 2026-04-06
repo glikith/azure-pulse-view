@@ -7,6 +7,7 @@ import { useAppSelector, useAppDispatch } from '@/store';
 import { setSelectedSubscription, setSelectedResourceGroup, setSelectedRegion } from '@/store/slices/uiSlice';
 
 const TopHeader: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const subscriptions = useAppSelector((s) => s.azureSubscriptions.list);
   const resourceGroups = useAppSelector((s) => s.azureResources.resourceGroups);
