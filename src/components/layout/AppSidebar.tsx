@@ -59,12 +59,6 @@ const AppSidebar: React.FC = () => {
         })}
       </nav>
 
-      <button
-        onClick={() => dispatch(toggleSidebar())}
-        className="flex items-center justify-center h-10 border-t border-sidebar-border text-sidebar-foreground hover:text-foreground transition-colors"
-      >
-        {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-      </button>
     </aside>
   );
 };
