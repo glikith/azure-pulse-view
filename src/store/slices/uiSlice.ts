@@ -52,6 +52,9 @@ const uiSlice = createSlice({
     toggleSidebar: (state) => {
       state.sidebarOpen = !state.sidebarOpen;
     },
+    toggleDarkMode: (state) => {
+      state.darkMode = !state.darkMode;
+    },
     setPollingInterval: (state, action: PayloadAction<number>) => {
       state.pollingInterval = action.payload;
     },
