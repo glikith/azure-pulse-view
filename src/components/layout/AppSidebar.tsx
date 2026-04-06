@@ -1,10 +1,10 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import {
-  LayoutDashboard, Server, Activity, FileText, Bell, Settings
+  LayoutDashboard, Server, Activity, FileText, Bell, Settings, Menu, Sun, Moon
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { toggleSidebar } from '@/store/slices/uiSlice';
+import { toggleSidebar, toggleDarkMode } from '@/store/slices/uiSlice';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -19,6 +19,7 @@ const AppSidebar: React.FC = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const sidebarOpen = useAppSelector((s) => s.ui.sidebarOpen);
+  const darkMode = useAppSelector((s) => s.ui.darkMode);
   const activeAlerts = useAppSelector((s) => s.azureAlerts.active.length);
   const degradedResources = useAppSelector((s) =>
     s.azureResources.resources.filter((r) => r.healthState !== 'Healthy').length
@@ -32,6 +33,23 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside className={`flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-200 ${sidebarOpen ? 'w-56' : 'w-14'}`}>
+      <div className="flex items-center gap-2 px-3 h-14 border-b border-sidebar-border">
+        <button
+          onClick={() => dispatch(toggleSidebar())}
+          className="h-8 w-8 flex items-center justify-center rounded-md text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors shrink-0"
+          aria-label="Toggle sidebar"
+        >
+          <Menu className="h-4 w-4" />
+        </button>
+        {sidebarOpen && (
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity overflow-hidden">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+              <Activity className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="text-sm font-semibold text-foreground tracking-tight whitespace-nowrap">VMS Monitor</span>
+          </Link>
+        )}
+      </div>
 
       <nav className="flex-1 py-2 space-y-0.5 px-2">
         {navItems.map((item) => {
@@ -59,6 +77,14 @@ const AppSidebar: React.FC = () => {
         })}
       </nav>
 
+      <button
+        onClick={() => dispatch(toggleDarkMode())}
+        className="flex items-center gap-3 px-5 py-2.5 border-t border-sidebar-border text-sidebar-foreground hover:text-foreground transition-colors"
+        aria-label="Toggle dark mode"
+      >
+        {darkMode ? <Sun className="h-4 w-4 shrink-0" /> : <Moon className="h-4 w-4 shrink-0" />}
+        {sidebarOpen && <span className="text-sm">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>}
+      </button>
     </aside>
   );
 };

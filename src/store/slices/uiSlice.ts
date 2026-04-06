@@ -6,6 +6,7 @@ interface UiState {
   selectedTimeRange: string;
   selectedRegion: string | null;
   sidebarOpen: boolean;
+  darkMode: boolean;
   pollingInterval: number;
   wsUrl: string;
   apiBaseUrl: string;
@@ -21,6 +22,7 @@ const initialState: UiState = {
   selectedTimeRange: 'PT1H',
   selectedRegion: null,
   sidebarOpen: true,
+  darkMode: true,
   pollingInterval: 5000,
   wsUrl: 'ws://localhost:3001/ws/azure/metrics-stream',
   apiBaseUrl: '/api/azure',
@@ -50,6 +52,9 @@ const uiSlice = createSlice({
     toggleSidebar: (state) => {
       state.sidebarOpen = !state.sidebarOpen;
     },
+    toggleDarkMode: (state) => {
+      state.darkMode = !state.darkMode;
+    },
     setPollingInterval: (state, action: PayloadAction<number>) => {
       state.pollingInterval = action.payload;
     },
@@ -76,7 +81,7 @@ const uiSlice = createSlice({
 
 export const {
   setSelectedSubscription, setSelectedResourceGroup, setSelectedTimeRange,
-  setSelectedRegion, toggleSidebar, setPollingInterval, setWsUrl, setApiBaseUrl,
+  setSelectedRegion, toggleSidebar, toggleDarkMode, setPollingInterval, setWsUrl, setApiBaseUrl,
   setAlertSeverityThreshold, setKqlWorkspaceId, setWsConnectionState, setLastRefreshed,
 } = uiSlice.actions;
 export default uiSlice.reducer;

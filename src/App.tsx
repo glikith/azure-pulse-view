@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MainLayout from "@/components/layout/MainLayout";
+import ThemeSync from "@/components/shared/ThemeSync";
 import DashboardPage from "./pages/DashboardPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import MetricsPage from "./pages/MetricsPage";
@@ -16,6 +17,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <Provider store={store}>
+    <ThemeSync />
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
