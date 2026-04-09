@@ -4,7 +4,6 @@ import ResourceHealthBadge from '@/components/resources/ResourceHealthBadge';
 import EmptyState from '@/components/shared/EmptyState';
 import ErrorState from '@/components/shared/ErrorState';
 import LoadingState from '@/components/shared/LoadingState';
-import { RESOURCE_TYPE_LABELS } from '@/azure/azureConstants';
 
 const VM_TYPE = 'Microsoft.Compute/virtualMachines';
 
@@ -21,21 +20,16 @@ const ResourcesPage: React.FC = () => {
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-foreground">Azure Resources</h1>
-        <span className="text-xs text-muted-foreground">{filtered.length} resources</span>
+        <h1 className="text-lg font-semibold text-foreground">Virtual Machines</h1>
+        <span className="text-xs text-muted-foreground">{filtered.length} VMs</span>
       </div>
 
       <div className="flex gap-2 flex-wrap">
         <input
-          type="text" placeholder="Search resources..." value={search}
+          type="text" placeholder="Search VMs..." value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="h-8 rounded-md bg-secondary border border-border text-xs text-foreground px-3 w-48 focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground"
         />
-        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}
-          className="h-8 rounded-md bg-secondary border border-border text-xs text-secondary-foreground px-2 focus:outline-none focus:ring-1 focus:ring-ring">
-          <option value="">All Types</option>
-          {types.map((t) => <option key={t} value={t}>{RESOURCE_TYPE_LABELS[t] || t}</option>)}
-        </select>
         <select value={healthFilter} onChange={(e) => setHealthFilter(e.target.value)}
           className="h-8 rounded-md bg-secondary border border-border text-xs text-secondary-foreground px-2 focus:outline-none focus:ring-1 focus:ring-ring">
           <option value="">All Health</option>
@@ -56,9 +50,7 @@ const ResourcesPage: React.FC = () => {
             <thead>
               <tr className="border-b border-border bg-muted/30">
                 <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Name</th>
-                <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Type</th>
                 <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Region</th>
-                <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Subscription</th>
                 <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Resource Group</th>
                 <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Status</th>
                 <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Health</th>
@@ -69,9 +61,7 @@ const ResourcesPage: React.FC = () => {
               {filtered.map((r) => (
                 <tr key={r.resourceId} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                   <td className="px-4 py-2.5 font-medium text-foreground">{r.resourceName}</td>
-                  <td className="px-4 py-2.5 text-muted-foreground">{RESOURCE_TYPE_LABELS[r.resourceType] || r.resourceType}</td>
                   <td className="px-4 py-2.5 text-muted-foreground font-mono">{r.region}</td>
-                  <td className="px-4 py-2.5 text-muted-foreground font-mono text-[10px]">{r.subscriptionId}</td>
                   <td className="px-4 py-2.5 text-muted-foreground">{r.resourceGroup}</td>
                   <td className="px-4 py-2.5 text-muted-foreground">{r.status}</td>
                   <td className="px-4 py-2.5"><ResourceHealthBadge health={r.healthState} /></td>
@@ -82,7 +72,7 @@ const ResourcesPage: React.FC = () => {
           </table>
         </div>
       ) : (
-        <EmptyState message="No resources found. Connect your Azure backend to view resources." />
+        <EmptyState message="No virtual machines found. Connect your Azure backend to view VMs." />
       )}
     </div>
   );
