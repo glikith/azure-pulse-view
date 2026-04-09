@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 
 const CHART_COLORS = ['hsl(207, 90%, 54%)', 'hsl(142, 71%, 45%)', 'hsl(38, 92%, 50%)', 'hsl(280, 65%, 60%)', 'hsl(190, 80%, 50%)', 'hsl(330, 70%, 55%)'];
+const VM_TYPE = 'Microsoft.Compute/virtualMachines';
 
 const DashboardPage: React.FC = () => {
   const { data: metricsData, loading: metricsLoading, error: metricsError } = useAppSelector((s) => s.azureMetrics);
