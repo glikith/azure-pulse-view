@@ -35,8 +35,10 @@ const DashboardPage: React.FC = () => {
   );
 
   // Resource type distribution
-  const typeDistribution = resources.reduce((acc, r) => {
-    const label = RESOURCE_TYPE_LABELS[r.resourceType] || r.resourceType;
+  const vmResources = resources.filter((r) => r.resourceType === VM_TYPE);
+
+  const typeDistribution = vmResources.reduce((acc, r) => {
+    const label = r.resourceGroup || 'Unknown';
     acc[label] = (acc[label] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
