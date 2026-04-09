@@ -61,7 +61,7 @@ const DashboardPage: React.FC = () => {
         <AzureMetricCard
           title="Memory Usage"
           icon={<HardDrive className="h-4 w-4" />}
-          metric={avgMem !== null ? { value: avgMem, unit: 'Percent', trend: 'stable' } : null}
+          metric={avgMem !== null ? { value: avgMem, unit: 'Bytes', trend: 'stable' } : null}
           sparklineData={metrics.flatMap((m) => m.timeSeries.map((ts) => (ts as Record<string, unknown>).memoryUsage as number || 0)).slice(-10)}
           resourceCount={metrics.length}
           loading={metricsLoading}
