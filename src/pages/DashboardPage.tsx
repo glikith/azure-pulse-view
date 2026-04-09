@@ -71,7 +71,7 @@ const DashboardPage: React.FC = () => {
         <AzureMetricCard
           title="Network Traffic"
           icon={<Wifi className="h-4 w-4" />}
-          metric={totalNetIn + totalNetOut > 0 ? { value: totalNetIn + totalNetOut, unit: 'MBps', trend: 'stable' } : null}
+          metric={totalNetIn + totalNetOut > 0 ? { value: totalNetIn + totalNetOut, unit: 'Bytes', trend: 'stable' } : null}
           sparklineData={[]}
           resourceCount={metrics.length}
           loading={metricsLoading}
