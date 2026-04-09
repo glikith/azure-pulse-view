@@ -6,15 +6,15 @@ import ErrorState from '@/components/shared/ErrorState';
 import LoadingState from '@/components/shared/LoadingState';
 import { RESOURCE_TYPE_LABELS } from '@/azure/azureConstants';
 
+const VM_TYPE = 'Microsoft.Compute/virtualMachines';
+
 const ResourcesPage: React.FC = () => {
   const { resources, loading, error } = useAppSelector((s) => s.azureResources);
-  const [typeFilter, setTypeFilter] = React.useState('');
   const [healthFilter, setHealthFilter] = React.useState('');
   const [search, setSearch] = React.useState('');
 
-  const types = [...new Set(resources.map((r) => r.resourceType))];
-  const filtered = resources
-    .filter((r) => !typeFilter || r.resourceType === typeFilter)
+  const vmResources = resources.filter((r) => r.resourceType === VM_TYPE);
+  const filtered = vmResources
     .filter((r) => !healthFilter || r.healthState === healthFilter)
     .filter((r) => !search || r.resourceName.toLowerCase().includes(search.toLowerCase()));
 
