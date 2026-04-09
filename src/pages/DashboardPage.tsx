@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 
 const CHART_COLORS = ['hsl(207, 90%, 54%)', 'hsl(142, 71%, 45%)', 'hsl(38, 92%, 50%)', 'hsl(280, 65%, 60%)', 'hsl(190, 80%, 50%)', 'hsl(330, 70%, 55%)'];
+const VM_TYPE = 'Microsoft.Compute/virtualMachines';
 
 const DashboardPage: React.FC = () => {
   const { data: metricsData, loading: metricsLoading, error: metricsError } = useAppSelector((s) => s.azureMetrics);
@@ -34,8 +35,10 @@ const DashboardPage: React.FC = () => {
   );
 
   // Resource type distribution
-  const typeDistribution = resources.reduce((acc, r) => {
-    const label = RESOURCE_TYPE_LABELS[r.resourceType] || r.resourceType;
+  const vmResources = resources.filter((r) => r.resourceType === VM_TYPE);
+
+  const typeDistribution = vmResources.reduce((acc, r) => {
+    const label = r.resourceGroup || 'Unknown';
     acc[label] = (acc[label] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -60,7 +63,7 @@ const DashboardPage: React.FC = () => {
         <AzureMetricCard
           title="Memory Usage"
           icon={<HardDrive className="h-4 w-4" />}
-          metric={avgMem !== null ? { value: avgMem, unit: 'Percent', trend: 'stable' } : null}
+          metric={avgMem !== null ? { value: avgMem, unit: 'Bytes', trend: 'stable' } : null}
           sparklineData={metrics.flatMap((m) => m.timeSeries.map((ts) => (ts as Record<string, unknown>).memoryUsage as number || 0)).slice(-10)}
           resourceCount={metrics.length}
           loading={metricsLoading}
@@ -70,7 +73,7 @@ const DashboardPage: React.FC = () => {
         <AzureMetricCard
           title="Network Traffic"
           icon={<Wifi className="h-4 w-4" />}
-          metric={totalNetIn + totalNetOut > 0 ? { value: totalNetIn + totalNetOut, unit: 'MBps', trend: 'stable' } : null}
+          metric={totalNetIn + totalNetOut > 0 ? { value: totalNetIn + totalNetOut, unit: 'Bytes', trend: 'stable' } : null}
           sparklineData={[]}
           resourceCount={metrics.length}
           loading={metricsLoading}
@@ -125,7 +128,7 @@ const DashboardPage: React.FC = () => {
                 <AreaChart data={timeSeriesData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(222, 20%, 16%)" />
                   <XAxis dataKey="timestamp" tick={{ fontSize: 10, fill: 'hsl(215, 15%, 55%)' }} tickFormatter={(v) => new Date(v).toLocaleTimeString()} />
-                  <YAxis tick={{ fontSize: 10, fill: 'hsl(215, 15%, 55%)' }} domain={[0, 100]} />
+                  <YAxis tick={{ fontSize: 10, fill: 'hsl(215, 15%, 55%)' }} />
                   <Tooltip contentStyle={{ background: 'hsl(222, 44%, 8%)', border: '1px solid hsl(222, 20%, 16%)', borderRadius: '6px', fontSize: '12px' }} />
                   <Area type="monotone" dataKey="memoryUsage" stroke={CHART_COLORS[1]} fill={CHART_COLORS[1]} fillOpacity={0.2} name="Memory %" />
                 </AreaChart>
@@ -187,13 +190,12 @@ const DashboardPage: React.FC = () => {
         </div>
         {resourcesLoading ? (
           <LoadingState type="table" rows={5} />
-        ) : resources.length > 0 ? (
+        ) : vmResources.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Name</th>
-                  <th className="text-left px-4 py-2 font-medium text-muted-foreground">Type</th>
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Region</th>
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Resource Group</th>
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Status</th>
@@ -201,10 +203,9 @@ const DashboardPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {resources.map((r) => (
+                {vmResources.map((r) => (
                   <tr key={r.resourceId} className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer">
                     <td className="px-4 py-2 font-medium text-foreground">{r.resourceName}</td>
-                    <td className="px-4 py-2 text-muted-foreground">{RESOURCE_TYPE_LABELS[r.resourceType] || r.resourceType}</td>
                     <td className="px-4 py-2 text-muted-foreground font-mono">{r.region}</td>
                     <td className="px-4 py-2 text-muted-foreground">{r.resourceGroup}</td>
                     <td className="px-4 py-2 text-muted-foreground">{r.status}</td>

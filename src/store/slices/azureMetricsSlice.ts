@@ -60,7 +60,7 @@ const azureMetricsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMetrics.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(fetchMetrics.pending, (state) => { if (Object.keys(state.data).length === 0) state.loading = true; state.error = null; })
       .addCase(fetchMetrics.fulfilled, (state, action) => {
         state.loading = false;
         state.lastFetched = new Date().toISOString();

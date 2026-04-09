@@ -48,7 +48,7 @@ const azureResourcesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchResources.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(fetchResources.pending, (state) => { if (state.resources.length === 0) state.loading = true; state.error = null; })
       .addCase(fetchResources.fulfilled, (state, action) => { state.loading = false; state.resources = action.payload; })
       .addCase(fetchResources.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; })
       .addCase(fetchResourceGroups.fulfilled, (state, action) => { state.resourceGroups = action.payload; });
