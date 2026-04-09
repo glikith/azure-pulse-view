@@ -12,8 +12,10 @@ const TopHeader: React.FC = () => {
   const selectedRg = useAppSelector((s) => s.ui.selectedResourceGroup);
   const selectedRegion = useAppSelector((s) => s.ui.selectedRegion);
   const resources = useAppSelector((s) => s.azureResources.resources);
+  const vmResources = resources.filter((r) => r.resourceType === 'Microsoft.Compute/virtualMachines');
+  const vmResourceGroups = [...new Set(vmResources.map((r) => r.resourceGroup))];
 
-  const regions = [...new Set(resources.map((r) => r.region))].sort();
+  const regions = [...new Set(vmResources.map((r) => r.region))].sort();
 
   return (
     <header className="h-12 flex items-center gap-3 px-4 border-b border-border bg-card/50 backdrop-blur shrink-0">
