@@ -126,7 +126,7 @@ const DashboardPage: React.FC = () => {
                 <AreaChart data={timeSeriesData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(222, 20%, 16%)" />
                   <XAxis dataKey="timestamp" tick={{ fontSize: 10, fill: 'hsl(215, 15%, 55%)' }} tickFormatter={(v) => new Date(v).toLocaleTimeString()} />
-                  <YAxis tick={{ fontSize: 10, fill: 'hsl(215, 15%, 55%)' }} domain={[0, 100]} />
+                  <YAxis tick={{ fontSize: 10, fill: 'hsl(215, 15%, 55%)' }} />
                   <Tooltip contentStyle={{ background: 'hsl(222, 44%, 8%)', border: '1px solid hsl(222, 20%, 16%)', borderRadius: '6px', fontSize: '12px' }} />
                   <Area type="monotone" dataKey="memoryUsage" stroke={CHART_COLORS[1]} fill={CHART_COLORS[1]} fillOpacity={0.2} name="Memory %" />
                 </AreaChart>
