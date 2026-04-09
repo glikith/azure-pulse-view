@@ -18,9 +18,14 @@ export const fetchMetrics = createAsyncThunk(
   async (params: { subscriptionId?: string; resourceGroupName?: string; resourceId?: string; timeRange?: string; metricNames?: string }, { rejectWithValue }) => {
     try {
       const response = await azureApi.getMetrics(params);
-      // Single resource returns a single object; wrap in array for uniform handling
-      const raw = (response.data as any)?.results ?? (Array.isArray(response.data) ? response.data : [response.data]);
-      return z.array(AzureResourceMetricSchema).parse(raw);
+      const raw = response.data as any;
+      // Edge function returns a single resource metric object
+      if (raw?.resourceId) {
+        return [AzureResourceMetricSchema.parse(raw)];
+      }
+      // Batch results
+      const arr = raw?.results ?? (Array.isArray(raw) ? raw : [raw]);
+      return z.array(AzureResourceMetricSchema).parse(arr);
     } catch (error) {
       return rejectWithValue(parseError(error).message);
     }
