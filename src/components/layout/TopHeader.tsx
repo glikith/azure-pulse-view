@@ -36,7 +36,7 @@ const TopHeader: React.FC = () => {
         className="h-8 rounded-md bg-secondary border border-border text-xs text-secondary-foreground px-2 max-w-[180px] focus:outline-none focus:ring-1 focus:ring-ring"
       >
         <option value="">All Resource Groups</option>
-        {resourceGroups.map((rg) => (
+        {resourceGroups.filter((rg) => vmResourceGroups.includes(rg.name)).map((rg) => (
           <option key={rg.name} value={rg.name}>{rg.name}</option>
         ))}
       </select>

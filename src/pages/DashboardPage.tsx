@@ -190,13 +190,12 @@ const DashboardPage: React.FC = () => {
         </div>
         {resourcesLoading ? (
           <LoadingState type="table" rows={5} />
-        ) : resources.length > 0 ? (
+        ) : vmResources.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Name</th>
-                  <th className="text-left px-4 py-2 font-medium text-muted-foreground">Type</th>
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Region</th>
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Resource Group</th>
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">Status</th>
@@ -204,10 +203,9 @@ const DashboardPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {resources.map((r) => (
+                {vmResources.map((r) => (
                   <tr key={r.resourceId} className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer">
                     <td className="px-4 py-2 font-medium text-foreground">{r.resourceName}</td>
-                    <td className="px-4 py-2 text-muted-foreground">{RESOURCE_TYPE_LABELS[r.resourceType] || r.resourceType}</td>
                     <td className="px-4 py-2 text-muted-foreground font-mono">{r.region}</td>
                     <td className="px-4 py-2 text-muted-foreground">{r.resourceGroup}</td>
                     <td className="px-4 py-2 text-muted-foreground">{r.status}</td>
