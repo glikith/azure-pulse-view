@@ -21,11 +21,27 @@ export const fetchMetrics = createAsyncThunk(
       const raw = response.data as any;
       // Edge function returns a single resource metric object
       if (raw?.resourceId) {
-        return [AzureResourceMetricSchema.parse(raw)];
+        const parsed = AzureResourceMetricSchema.safeParse(raw);
+        if (parsed.success) return [parsed.data];
+        console.warn('Metric parse warning:', parsed.error.message, raw);
+        // Return a minimal valid object so dashboard doesn't break
+        return [{
+          resourceId: raw.resourceId,
+          metrics: raw.metrics || {},
+          timeSeries: raw.timeSeries || [],
+          dataAvailable: raw.dataAvailable ?? false,
+          lastUpdated: raw.lastUpdated || new Date().toISOString(),
+        } as any];
       }
       // Batch results
       const arr = raw?.results ?? (Array.isArray(raw) ? raw : [raw]);
-      return z.array(AzureResourceMetricSchema).parse(arr);
+      const results: any[] = [];
+      for (const item of arr) {
+        const parsed = AzureResourceMetricSchema.safeParse(item);
+        if (parsed.success) results.push(parsed.data);
+        else console.warn('Metric parse warning:', parsed.error.message);
+      }
+      return results;
     } catch (error) {
       return rejectWithValue(parseError(error).message);
     }
