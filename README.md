@@ -1,4 +1,4 @@
-# 🔵 Azure Pulse View
+# Azure Pulse View
 
 > A real-time monitoring dashboard for Azure infrastructure — track resource health, usage metrics, and alerts from a single unified view.
 
@@ -44,38 +44,8 @@ Testing      → Vitest + Playwright
 
 ---
 
-## Project Structure
-
-```
-src/
-├── components/     # Reusable UI components (shadcn/ui + custom)
-├── pages/          # Route-level views
-├── store/          # Redux slices
-├── hooks/          # Custom React hooks
-├── lib/            # Supabase client, utilities
-supabase/
-└── migrations/     # DB schema migrations
-```
-
----
-
-## Roadmap
-
-- [ ] Azure API integration for live data polling
-- [ ] Cost analysis panel
-- [ ] Multi-subscription support
-- [ ] Alert notification webhooks
-- [ ] Export reports as PDF/CSV
-
----
-
 ## Team
 
-| Name | Roll Number |
-|---|---|
-| C Pravin Sai | 2420030777 |
-| G Likith | 2420030056 |
-| J Hemanth | 2420039805 |
-| Renesh | 2420030346 |
+[Gummadi Likith](https://github.com/glikith) and [Chiday Pravin Sai](https://github.com/Pravinsaichiday)
 
 ---
