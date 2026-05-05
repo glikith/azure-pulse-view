@@ -1,6 +1,6 @@
 # Azure Pulse View
 
-> A real-time monitoring dashboard for Azure infrastructure — track resource health, usage metrics, and alerts from a single unified view.
+> A real-time monitoring dashboard for Azure infrastructure. Track resource health, usage metrics, and alerts from a single unified view.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
@@ -12,7 +12,7 @@
 
 ## Overview
 
-Azure Pulse View is a monitoring dashboard that surfaces Azure resource data in a clean, interactive UI. Built with React, TypeScript, and Supabase, it pulls infrastructure metrics and displays them through charts and status panels — giving you visibility into your cloud environment without digging through the Azure portal.
+Azure Pulse View is a monitoring dashboard that surfaces Azure resource data in a clean, interactive UI. Built with React, TypeScript, and Supabase, it pulls infrastructure metrics and displays them through charts and status panels, giving you visibility into your cloud environment without digging through the Azure portal.
 
 ---
 
