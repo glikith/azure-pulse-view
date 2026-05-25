@@ -44,6 +44,33 @@ Testing      → Vitest + Playwright
 
 ---
 
+## Prerequisites
+
+- Node.js >= 18
+- A [Supabase](https://supabase.com) account and project
+- An Azure account with a service principal that has Reader access to your subscription
+
+## Setup
+
+1. Clone the repo and install dependencies
+```bash
+   npm install
+```
+
+2. Copy the environment example and fill in your values
+```bash
+   cp .env.example .env
+```
+
+3. Set your Azure credentials as Supabase Edge Function secrets in your Supabase dashboard under Project Settings > Edge Functions > Secrets. See `supabase-secrets.example` for the required keys.
+
+4. Start the development server
+```bash
+   npm run dev
+```
+
+---
+
 ## Team
 
 [Gummadi Likith](https://github.com/glikith) and [Chiday Pravin Sai](https://github.com/Pravinsaichiday)
